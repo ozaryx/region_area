@@ -1,4 +1,5 @@
 from math import pi as PI, sqrt
+import os
 
 class Region:
     """docstring for Region"""
@@ -21,16 +22,16 @@ class Region:
             with open(self._filename, 'r', encoding='utf-8') as f:
                 for line in f:
                     if 'Circle' in line:
-                        r = line.strip().split(',')[1]
-                        fig = Circle(r)
+                        args = line.strip().split(',')[1:]
+                        fig = Circle(args)
                         yield fig
                     elif 'Triangle' in line:
-                        a, b, c = line.strip().split(',')[1:-1]
-                        fig = Triangle(a, b, c)
+                        args = line.strip().split(',')[1:]
+                        fig = Triangle(args)
                         yield fig
-                    elif 'Rect' in elem:
-                        a, b = line.strip().split(',')[1:-1]
-                        fig = Rectangle(a, b)
+                    elif 'Rect' in line:
+                        args = line.strip().split(',')[1:]
+                        fig = Rectangle(args)
                         yield fig
         except FileNotFoundError:
             return ''
@@ -42,30 +43,68 @@ class Region:
 
 class Figure:
     """docstring for Figure"""
-    def __init__(self, fig_type):
-        super().__init__(fig_type)
+    def __init__(self, args, fig_type):
         self.fig_type = fig_type
+        self.args = args
+        self._area()
+
+    def _area(self):
+        self.area = None
+
+    def __str__(self):
+        return '{}: стороны={}, площадь: {}'.format(self.fig_type, self.args, self.area)
+
+    def __repr__(self):
+        return 'Figure({})'.format(repr(self.fig_type))
+
         
 class Circle(Figure):
     """"""
-    def __init__(self, fig_type='Circle', radius):
-        super().__init__(fig_type)
-        self.radius = radius
+    def __init__(self, args):
+        super().__init__(args, fig_type='Circle')
+
+    def _area(self):
+        r, = [float(elem) for elem in self.args]
+        self.area = round(PI * r**2)
+
+    def __str__(self):
+        return '{}: радиус={}, площадь: {}'.format(self.fig_type, self.args, self.area)
+
+    def __repr__(self):
+        return 'Figure({})'.format(repr(self.fig_type))
 
 class Triangle(Figure):
     """"""
-    def __init__(self, fig_type='Circle', radius):
-        super().__init__(fig_type)
-        self.radius = radius
+    def __init__(self, args):
+        super().__init__(args, fig_type='Triangle')
+
+    def _area(self):
+        a, b, c = [float(elem) for elem in self.args]
+        p = (a + b + c) / 2
+        self.area = round(sqrt(p * (p-a) * (p-b) * (p-c)))
 
 class Rectangle(Figure):
     """"""
-    def __init__(self, fig_type='Circle', radius):
-        super().__init__(fig_type)
-        self.radius = radius        
+    def __init__(self, args):
+        super().__init__(args, fig_type='Rectangle')
 
-with open('figures.txt', 'r') as f:
-    figure = iter(f.readlines())
+    def _area(self):
+        a, b = [float(elem) for elem in self.args]
+        self.area = round(a * b)
 
-while True:
-    print(next(figure).strip())
+
+reg = Region('figures.txt')
+
+list_fig = list(reg.figures())
+print(list_fig)
+
+for elem in reg.figures():
+    print(elem)
+
+# print(Figure.area)
+
+# with open('figures.txt', 'r') as f:
+#     figure = iter(f.readlines())
+
+# while True:
+#     print(next(figure).strip())
