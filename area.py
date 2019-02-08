@@ -10,12 +10,18 @@ class Region:
             raise FileNotFoundError(f'"{self._filename}" is not exists')
         elif not os.path.isfile(self._filename):
             raise FileNotFoundError(f'"{self._filename}" is not a file')
+        self._region_area()
+        self._top5()
 
-    def area():
-        ...
+    def _region_area(self):
+        self.area = 0
+        for elem in self.figures():
+            self.area += elem.area
 
-    def top5():
-        ...
+    def _top5(self):
+        fig_list = [(elem.fig_type, elem.area) for elem in self.figures()]
+        self.top5 = sorted(fig_list, key=lambda x: x[1], reverse=True)[0:6]
+        # self.top5 = fig_list
 
     def figures(self):
         try:
@@ -59,52 +65,57 @@ class Figure:
 
         
 class Circle(Figure):
-    """"""
+    """docstring for Circle"""
     def __init__(self, args):
         super().__init__(args, fig_type='Circle')
 
     def _area(self):
-        r, = [float(elem) for elem in self.args]
-        self.area = round(PI * r**2)
+        self.r, = (float(elem) for elem in self.args)
+        self.area = round(PI * self.r**2)
 
     def __str__(self):
-        return '{}: радиус={}, площадь: {}'.format(self.fig_type, self.args, self.area)
-
-    def __repr__(self):
-        return 'Figure({})'.format(repr(self.fig_type))
+        return '{}: радиус={}, площадь: {}'.format(self.fig_type, self.r, self.area)
 
 class Triangle(Figure):
-    """"""
+    """docstring for triangle"""
     def __init__(self, args):
         super().__init__(args, fig_type='Triangle')
 
     def _area(self):
-        a, b, c = [float(elem) for elem in self.args]
-        p = (a + b + c) / 2
-        self.area = round(sqrt(p * (p-a) * (p-b) * (p-c)))
+        self.a, self.b, self.c = (float(elem) for elem in self.args)
+        p = (self.a + self.b + self.c) / 2
+        self.area = round(sqrt(p * (p-self.a) * (p-self.b) * (p-self.c)))
+
+    def __str__(self):
+        return '{}: стороны=({}, {}, {}), площадь: {}'.format(self.fig_type, self.a, self.b, self.c, self.area)
 
 class Rectangle(Figure):
-    """"""
+    """docstring for Rectangle"""
     def __init__(self, args):
         super().__init__(args, fig_type='Rectangle')
 
     def _area(self):
-        a, b = [float(elem) for elem in self.args]
-        self.area = round(a * b)
+        self.a, self.b = (float(elem) for elem in self.args)
+        self.area = round(self.a * self.b)
+    def __str__(self):
+        return '{}: стороны=({}, {}), площадь: {}'.format(self.fig_type, self.a, self.b, self.area)
 
 
 reg = Region('figures.txt')
 
 list_fig = list(reg.figures())
+
 print(list_fig)
 
+print('')
+print('Список фигур')
 for elem in reg.figures():
     print(elem)
 
-# print(Figure.area)
+print('')
+print('Площадь всех фигур: {}\n'.format(reg.area))
 
-# with open('figures.txt', 'r') as f:
-#     figure = iter(f.readlines())
-
-# while True:
-#     print(next(figure).strip())
+print('Список ТОП-5 фигур по площади')
+for elem in reg.top5:
+    fig, area = elem
+    print('Фигура: {}, площадь: {}'.format(fig, area))
