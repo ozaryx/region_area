@@ -2,7 +2,7 @@ from math import pi as PI, sqrt
 import os
 
 class Region:
-    """docstring for Region"""
+    """Класс области фигур"""
     def __init__(self, filename):
         super(Region, self).__init__()
         self._filename = filename
@@ -14,16 +14,19 @@ class Region:
         self._top5()
 
     def _region_area(self):
+        """Вычисление суммарной площади всех фигур"""
         self.area = 0
         for elem in self.figures():
             self.area += elem.area
 
     def _top5(self):
+        """Получение 5 самых больших фигур по площади"""
         fig_list = [(elem.fig_type, elem.area) for elem in self.figures()]
         self.top5 = sorted(fig_list, key=lambda x: x[1], reverse=True)[0:6]
         # self.top5 = fig_list
 
     def figures(self):
+        """Создание набора объектов фигур по списку"""
         try:
             with open(self._filename, 'r', encoding='utf-8') as f:
                 for line in f:
@@ -48,7 +51,7 @@ class Region:
         return self.figures()
 
 class Figure:
-    """docstring for Figure"""
+    """Общий класс фигур"""
     def __init__(self, args, fig_type):
         self.fig_type = fig_type
         self.args = args
@@ -65,7 +68,7 @@ class Figure:
 
         
 class Circle(Figure):
-    """docstring for Circle"""
+    """Класс фигуры Circle"""
     def __init__(self, args):
         super().__init__(args, fig_type='Circle')
 
@@ -77,7 +80,7 @@ class Circle(Figure):
         return '{}: радиус={}, площадь: {}'.format(self.fig_type, self.r, self.area)
 
 class Triangle(Figure):
-    """docstring for triangle"""
+    """Класс фигуры Triangle"""
     def __init__(self, args):
         super().__init__(args, fig_type='Triangle')
 
@@ -90,7 +93,7 @@ class Triangle(Figure):
         return '{}: стороны=({}, {}, {}), площадь: {}'.format(self.fig_type, self.a, self.b, self.c, self.area)
 
 class Rectangle(Figure):
-    """docstring for Rectangle"""
+    """Класс фигуры Rectangle"""
     def __init__(self, args):
         super().__init__(args, fig_type='Rectangle')
 
@@ -100,21 +103,26 @@ class Rectangle(Figure):
     def __str__(self):
         return '{}: стороны=({}, {}), площадь: {}'.format(self.fig_type, self.a, self.b, self.area)
 
-
+# Создание области фигур
 reg = Region('figures.txt')
 
+# Вывод списка фигур
 list_fig = list(reg.figures())
-
 print(list_fig)
 
 print('')
+
+# Вывод списка свойств фигур
 print('Список фигур')
 for elem in reg.figures():
     print(elem)
 
 print('')
+
+# Вывод площади области фигур
 print('Площадь всех фигур: {}\n'.format(reg.area))
 
+# Вывод ТОП-5 фигур по площади
 print('Список ТОП-5 фигур по площади')
 for elem in reg.top5:
     fig, area = elem
