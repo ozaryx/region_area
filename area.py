@@ -1,5 +1,7 @@
-from math import pi as PI, sqrt
 import os
+from math import pi as PI
+from math import sqrt
+
 
 class Region:
     """Класс области фигур"""
