@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 from math import pi as PI
 from math import sqrt
@@ -5,6 +6,7 @@ from math import sqrt
 
 class Region:
     """Класс области фигур"""
+
     def __init__(self, filename):
         super(Region, self).__init__()
         self._filename = filename
@@ -48,12 +50,14 @@ class Region:
             return ''
         except PermissionError:
             return ''
-    
+
     def __iter__(self):
         return self.figures()
 
+
 class Figure:
     """Общий класс фигур"""
+
     def __init__(self, args, fig_type):
         self.fig_type = fig_type
         self.args = args
@@ -68,9 +72,10 @@ class Figure:
     def __repr__(self):
         return 'Figure({})'.format(repr(self.fig_type))
 
-        
+
 class Circle(Figure):
     """Класс фигуры Circle"""
+
     def __init__(self, args):
         super().__init__(args, fig_type='Circle')
 
@@ -81,8 +86,10 @@ class Circle(Figure):
     def __str__(self):
         return '{}: радиус={}, площадь: {}'.format(self.fig_type, self.r, self.area)
 
+
 class Triangle(Figure):
     """Класс фигуры Triangle"""
+
     def __init__(self, args):
         super().__init__(args, fig_type='Triangle')
 
@@ -94,19 +101,23 @@ class Triangle(Figure):
     def __str__(self):
         return '{}: стороны=({}, {}, {}), площадь: {}'.format(self.fig_type, self.a, self.b, self.c, self.area)
 
+
 class Rectangle(Figure):
     """Класс фигуры Rectangle"""
+
     def __init__(self, args):
         super().__init__(args, fig_type='Rectangle')
 
     def _area(self):
         self.a, self.b = (float(elem) for elem in self.args)
         self.area = round(self.a * self.b)
+
     def __str__(self):
         return '{}: стороны=({}, {}), площадь: {}'.format(self.fig_type, self.a, self.b, self.area)
 
+
 # Создание области фигур
-reg = Region('figures.txt')
+reg = Region('./region_area/figures.txt')
 
 # Вывод списка фигур
 list_fig = list(reg.figures())
