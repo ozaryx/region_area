@@ -99,7 +99,8 @@ class Triangle(Figure):
         self.area = round(sqrt(p * (p-self.a) * (p-self.b) * (p-self.c)))
 
     def __str__(self):
-        return '{}: стороны=({}, {}, {}), площадь: {}'.format(self.fig_type, self.a, self.b, self.c, self.area)
+        args = (self.fig_type, self.a, self.b, self.c, self.area)
+        return '{}: стороны=({}, {}, {}), площадь: {}'.format(*args)
 
 
 class Rectangle(Figure):
@@ -113,7 +114,8 @@ class Rectangle(Figure):
         self.area = round(self.a * self.b)
 
     def __str__(self):
-        return '{}: стороны=({}, {}), площадь: {}'.format(self.fig_type, self.a, self.b, self.area)
+        args = (self.fig_type, self.a, self.b, self.area)
+        return '{}: стороны=({}, {}), площадь: {}'.format(*args)
 
 
 # Создание области фигур
